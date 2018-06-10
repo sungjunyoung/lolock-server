@@ -40,8 +40,13 @@ public class ApiController {
      * 문 열기
      */
     @GetMapping(value = "/open", produces = "application/json; charset=utf8")
-    public String openDoor(HttpServletRequest httpServletRequest) {
-        return apiService.sendCommand("00000174d02544fffef0103d");
+    public Map<String, String> openDoor(HttpServletRequest httpServletRequest) {
+        apiService.sendCommand("00000174d02544fffef0103d");
+
+        Map<String, String> result = new HashMap<>();
+        result.put("code", "SUCCESS");
+        result.put("link", "작성 성공");
+        return result;
     }
 
     /**
