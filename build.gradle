@@ -25,7 +25,6 @@ bootJar {
 repositories {
     mavenCentral()
 }
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -35,4 +34,6 @@ dependencies {
     compile('org.codehaus.jackson:jackson-core-asl:1.9.13')
     compile('org.apache.httpcomponents:httpclient:4.5.3')
     compile('org.apache.httpcomponents:httpasyncclient:4.1.3')
+
+    compileOnly "org.projectlombok:lombok:1.18.0"
 }
