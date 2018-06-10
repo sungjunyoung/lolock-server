@@ -39,8 +39,8 @@ public class ApiController {
     /**
      * 문 열기
      */
-    @PutMapping(value = "/open", produces = "application/json; charset=utf8")
-    public Map<String, String> openDoor(HttpServletRequest httpServletRequest, @RequestBody Map<String, Object> requestBody) {
+    @GetMapping(value = "/open", produces = "application/json; charset=utf8")
+    public Map<String, String> openDoor(HttpServletRequest httpServletRequest) {
         apiService.sendCommand("00000174d02544fffef0103d");
 
         Map<String, String> result = new HashMap<>();
