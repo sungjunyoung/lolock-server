@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class ApiController {
-    private static AtomicInteger COUNTER = new AtomicInteger(0);
+    private static AtomicInteger COUNTER = new AtomicInteger(1);
 
     @Autowired
     private ApiService apiService;
@@ -48,11 +48,12 @@ public class ApiController {
      */
     @GetMapping(value = "/temp-url", produces = "application/json; charset=utf8")
     public String getTempUrl(HttpServletRequest httpServletRequest) {
-        String baseUrl = httpServletRequest.getLocalName();
+        String base = httpServletRequest.getLocalName();
+        String baseUrl = base.equals("localhost") ? "localhost" : "http://13.209.29.184";
         String port = baseUrl.equals("localhost") ? "8080" : "3000";
 
         int key = COUNTER.getAndIncrement();
-        // add chach
+        // add cache
         TempUrl tempUrl = new TempUrl(key);
         String tempPathVariable = apiService.getTempPathVariableWithCache(key, tempUrl);
         apiService.getKeyWithCache(tempPathVariable, tempUrl);
