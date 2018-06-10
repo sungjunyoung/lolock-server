@@ -2,10 +2,9 @@ package com.lolock.server.controller;
 
 import com.lolock.server.model.TempUrl;
 import com.lolock.server.service.ApiService;
+import org.apache.http.client.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class ApiController {
     }
 
     @GetMapping(value = "/phones/{phoneId}", produces = "application/json; charset=utf8")
-    public Map<String, Object> checkPhone(@PathVariable String phoneId){
+    public Map<String, Object> checkPhone(@PathVariable String phoneId) {
         return apiService.checkPhone(phoneId);
     }
 
@@ -52,19 +51,29 @@ public class ApiController {
         String baseUrl = httpServletRequest.getLocalName();
         String port = baseUrl.equals("localhost") ? "8080" : "3000";
 
-        int key = 1;
-//        int key = COUNTER.getAndIncrement();
-
+        int key = COUNTER.getAndIncrement();
         // add chach
         TempUrl tempUrl = new TempUrl(key);
         String tempPathVariable = apiService.getTempPathVariableWithCache(key, tempUrl);
         apiService.getKeyWithCache(tempPathVariable, tempUrl);
 
-        return baseUrl + ":" + port + "/" + apiService.getTempPathVariableWithCache(key, tempUrl);
+        return baseUrl + ":" + port + "/" + tempPathVariable;
     }
 
-//    @GetMapping(value = "/{pathVariable}", produces = "application/json; charset=utf8")
-//    public int tempOpen(@PathVariable String pathVariable) {
-//        return apiService.tempOpen(pathVariable);
-//    }
+    /**
+     * 임시 URL 로 접근
+     */
+    @GetMapping(value = "/{tempPathVariable}", produces = "application/json; charset=utf8")
+    public String tempOpen(@PathVariable String tempPathVariable) throws HttpResponseException {
+        TempUrl tempUrl = new TempUrl();
+        int key = apiService.getKeyWithCache(tempPathVariable, tempUrl);
+        if (key == 0) throw new HttpResponseException(401, "NO!");
+
+        return apiService.sendCommand("00000174d02544fffef0103d");
+    }
+
+    @PostMapping(value = "/users", produces = "application/json; charset=utf8")
+    public Map<String, Object> register(@RequestBody Map<String, Object> requestBody) {
+        return apiService.register(requestBody);
+    }
 }

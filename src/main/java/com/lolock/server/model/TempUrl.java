@@ -1,13 +1,13 @@
 package com.lolock.server.model;
 
-import lombok.NoArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
-
 import java.util.Random;
 
 public class TempUrl {
     private int key;
     private String pathVariable;
+
+    public TempUrl() {
+    }
 
     public TempUrl(int key) {
         this.key = key;

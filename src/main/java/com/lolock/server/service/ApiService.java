@@ -8,9 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ApiService {
@@ -73,12 +71,6 @@ public class ApiService {
         return restTemplate.exchange(url, HttpMethod.PUT, entity, String.class).getBody();
     }
 
-//    public String getTempUrlWithCache(){
-//        int key = COUNTER.getAndIncrement();
-//        return this.getTempUrl(1);
-//    }
-
-
     @Cacheable(value = "tempUrlPathVariable", key = "#key")
     public String getTempPathVariableWithCache(int key, TempUrl tempUrl) {
         return tempUrl.getPathVariable();
@@ -87,5 +79,12 @@ public class ApiService {
     @Cacheable(value = "key", key = "#pathVariable")
     public int getKeyWithCache(String pathVariable, TempUrl tempUrl) {
         return tempUrl.getKey();
+    }
+
+    public Map<String, Object> register(Map<String, Object> requestBody) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "SUCCESS");
+        result.put("message", "등록 성공");
+        return result;
     }
 }
