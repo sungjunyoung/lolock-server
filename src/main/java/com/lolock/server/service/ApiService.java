@@ -39,6 +39,12 @@ public class ApiService {
             result.put("code", "NOT REGISTERED");
             result.put("message", "미등록 휴대폰");
             result.put("userInfo", "");
+
+            Map<String, String> userInfo = new HashMap<>();
+            userInfo.put("name", "");
+            userInfo.put("lolockLTID", "");
+
+            result.put("userInfo", userInfo);
         }
 
         return result;
