@@ -48,7 +48,7 @@ public class ApiService {
 
     public Map<String, String> checkDevice(String deviceId) {
         Map<String, String> result = new HashMap<>();
-        if (deviceId.equals(DEVICE_ID)) {
+        if (deviceId.equals(LTID)) {
             result.put("code", "DEVICE_ID_AVAILABLE");
             result.put("message", "등록된 기기");
         } else {
@@ -84,8 +84,8 @@ public class ApiService {
         return tempUrl.getPathVariable();
     }
 
-    @Cacheable("key")
-    public int getKeyWithCache(String pathVariable) {
-        return 123;
+    @Cacheable(value = "key", key = "#pathVariable")
+    public int getKeyWithCache(String pathVariable, TempUrl tempUrl) {
+        return tempUrl.getKey();
     }
 }

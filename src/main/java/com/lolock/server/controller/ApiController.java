@@ -51,10 +51,15 @@ public class ApiController {
     public String getTempUrl(HttpServletRequest httpServletRequest) {
         String baseUrl = httpServletRequest.getLocalName();
         String port = baseUrl.equals("localhost") ? "8080" : "3000";
+
         int key = 1;
 //        int key = COUNTER.getAndIncrement();
 
+        // add chach
         TempUrl tempUrl = new TempUrl(key);
+        String tempPathVariable = apiService.getTempPathVariableWithCache(key, tempUrl);
+        apiService.getKeyWithCache(tempPathVariable, tempUrl);
+
         return baseUrl + ":" + port + "/" + apiService.getTempPathVariableWithCache(key, tempUrl);
     }
 

@@ -18,6 +18,10 @@ public class TempUrl {
         return this.pathVariable;
     }
 
+    public int getKey(){
+        return this.key;
+    }
+
     private String generatePathVariable() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
