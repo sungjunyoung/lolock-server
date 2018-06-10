@@ -1,11 +1,13 @@
 package com.lolock.server.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ApiService {
@@ -18,6 +20,19 @@ public class ApiService {
 
     public String healthCheck() {
         return "pong";
+    }
+
+    public Map<String, String> checkDevice(String deviceId){
+        Map<String, String> result = new HashMap<>();
+        if (deviceId.equals("00000174d02544fffef0103d")) {
+            result.put("code", "DEVICE_ID_AVAILABLE");
+            result.put("message", "등록된 기기");
+        } else {
+            result.put("code", "DEVICE_ID_ERR");
+            result.put("message", "등록되지 않은 기기");
+        }
+
+        return result;
     }
 
     public String sendCommand(String deviceId) {
