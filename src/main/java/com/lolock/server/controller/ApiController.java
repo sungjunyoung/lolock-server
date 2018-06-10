@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,7 +48,7 @@ public class ApiController {
      * 임시 URL 발급
      */
     @GetMapping(value = "/temp-url", produces = "application/json; charset=utf8")
-    public String getTempUrl(HttpServletRequest httpServletRequest) {
+    public Map<String, String> getTempUrl(HttpServletRequest httpServletRequest) {
         String base = httpServletRequest.getLocalName();
         String baseUrl = base.equals("localhost") ? "localhost" : "http://13.209.29.184";
         String port = baseUrl.equals("localhost") ? "8080" : "3000";
@@ -58,19 +59,31 @@ public class ApiController {
         String tempPathVariable = apiService.getTempPathVariableWithCache(key, tempUrl);
         apiService.getKeyWithCache(tempPathVariable, tempUrl);
 
-        return baseUrl + ":" + port + "/" + tempPathVariable;
+        Map<String, String> result = new HashMap<>();
+        result.put("code", "CREATED");
+        result.put("link", baseUrl + ":" + port + "/" + tempPathVariable);
+        return result;
     }
 
     /**
      * 임시 URL 로 접근
      */
     @GetMapping(value = "/{tempPathVariable}", produces = "application/json; charset=utf8")
-    public String tempOpen(@PathVariable String tempPathVariable) throws HttpResponseException {
+    public Map<String, String> tempOpen(@PathVariable String tempPathVariable) throws HttpResponseException {
         TempUrl tempUrl = new TempUrl();
         int key = apiService.getKeyWithCache(tempPathVariable, tempUrl);
-        if (key == 0) throw new HttpResponseException(401, "NO!");
+        Map<String, String> result = new HashMap<>();
 
-        return apiService.sendCommand("00000174d02544fffef0103d");
+        if (key == 0) {
+            result.put("code", "UNDEFINED");
+            result.put("message", "존재하지 않는 주소");
+            return result;
+        } else {
+            apiService.sendCommand("00000174d02544fffef0103d");
+            return result;
+        }
+
+
     }
 
     @PostMapping(value = "/users", produces = "application/json; charset=utf8")
